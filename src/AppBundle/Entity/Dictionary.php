@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Hateoas\Configuration\Annotation as Hateoas;
@@ -59,6 +60,18 @@ class Dictionary
     private $code;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Word", mappedBy="dictionary")
+     */
+    private $words;
+
+    public function __construct()
+    {
+        $this->words = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -88,5 +101,21 @@ class Dictionary
     public function setCode(string $code)
     {
         $this->code = $code;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWords()
+    {
+        return $this->words;
+    }
+
+    /**
+     * @param mixed $words
+     */
+    public function setWords($words)
+    {
+        $this->words = $words;
     }
 }

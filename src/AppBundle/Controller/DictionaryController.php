@@ -14,8 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Swagger\Annotations as SWG;
-use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 /**
  *
@@ -215,7 +213,7 @@ class DictionaryController extends FOSRestController
      *      )
      * )
      *
-     * @View()
+     * @View(serializerGroups={"word_get"})
      *
      * @Route("/dictionaries/{id}/words/", name="words_get")
      *

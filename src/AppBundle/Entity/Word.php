@@ -37,10 +37,10 @@ class Word
     private $word;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dictionary")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Dictionary", inversedBy="words", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    protected $dictionary;
+    private $dictionary;
 
     /**
      * Get id.
@@ -79,7 +79,7 @@ class Word
     /**
      * @return mixed
      */
-    public function getDictionary()
+    public function getDictionary() : Dictionary
     {
         return $this->dictionary;
     }
@@ -87,7 +87,7 @@ class Word
     /**
      * @param mixed $dictionary
      */
-    public function setDictionary($dictionary)
+    public function setDictionary(Dictionary $dictionary)
     {
         $this->dictionary = $dictionary;
     }

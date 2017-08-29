@@ -18,7 +18,7 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    #serializer:      { enable_annotations: true }
+    serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -81,6 +81,8 @@ fos_rest:
         enabled: true
         rules:
             - { path: '^/', priorities: ['json'], fallback_format: html }
+    service:
+        view_handler: fos_rest.view_handler.default
 
 nelmio_cors:
     defaults:
