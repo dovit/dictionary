@@ -30,7 +30,7 @@ class LoadFileCommand extends ContainerAwareCommand
     private function readFile($handler)
     {
         while ($line = fgets($handler)) {
-            yield substr($line, 0, strpos($line, '/') ?: strpos($line, '	'));
+            yield substr($line, 0, strpos($line, '/') ?: strpos($line, '\t'));
         }
     }
 
@@ -63,7 +63,7 @@ class LoadFileCommand extends ContainerAwareCommand
             $dictionary->getWords()->add($tmp);
             $em->persist($tmp);
 
-            if ($cnt === 400) {
+            if ($cnt === 1000) {
                 $em->flush();
                 $em->clear();
                 $dictionary = $em->getRepository('AppBundle:Dictionary')
@@ -71,12 +71,12 @@ class LoadFileCommand extends ContainerAwareCommand
                 $cnt = 0;
 
             }
-
             $cnt++;
         }
 
         $em->flush();
         $em->clear();
+        $output->writeln(memory_get_peak_usage());
         $output->writeln("end");
     }
 }

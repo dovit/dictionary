@@ -33,7 +33,7 @@ class DictionaryController extends FOSRestController
      *      )
      * )
      *
-     * @View()
+     * @View(serializerGroups={"dictionary_get"})
      *
      * @Route("/dictionaries/", name="dictionaries_get")
      *
@@ -213,7 +213,7 @@ class DictionaryController extends FOSRestController
      *      )
      * )
      *
-     * @View(serializerGroups={"word_get"})
+     * @View()
      *
      * @Route("/dictionaries/{id}/words/", name="words_get")
      *
@@ -227,12 +227,21 @@ class DictionaryController extends FOSRestController
      */
     public function getWordsDictionaryAction(Dictionary $dictionary)
     {
-        $words = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('AppBundle:Word')
-            ->findByDictionary($dictionary);
+        $words = $this->get('app_word_repository')
+            ->fetchWordByDictionary($dictionary, 1, 100);
 
-        return $this->handleView($this->view($words, 200));
+        $response = $this->handleView(
+            $this->view($words->getItems(), 200)
+        );
+        $response->headers->add(
+            [
+                'X-page-count'              => $words->getPageCount(),
+                'X-current-page-number'     => $words->getCurrentPageNumber(),
+                'X-item-number-per-page'    => $words->getItemNumberPerPage(),
+                'X-total-item'              => $words->getTotalItemCount(),
+            ]
+        );
+        return $response;
     }
 
     /**

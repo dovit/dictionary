@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Word.
@@ -16,6 +17,8 @@ use Swagger\Annotations as SWG;
  *     required={"word", "dictionary"},
  *     type="object"
  * )
+ *
+ * @JMS\ExclusionPolicy("all")
  */
 class Word
 {
@@ -25,6 +28,8 @@ class Word
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Expose()
      */
     private $id;
 
@@ -33,6 +38,8 @@ class Word
      *
      * @ORM\Column(name="word", type="string", length=255)
      * @SWG\Property(readOnly=false, example="france")
+     *
+     * @JMS\Expose()
      */
     private $word;
 

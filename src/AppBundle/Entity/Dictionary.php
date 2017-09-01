@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Dictionary.
@@ -44,6 +45,8 @@ class Dictionary
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @JMS\Groups({"list", "details", "dictionary_get"})
      */
     private $id;
 
@@ -63,6 +66,10 @@ class Dictionary
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Word", mappedBy="dictionary")
+     *
+     * @JMS\Groups({"get_one"})
+     *
+     * @JMS\Exclude()
      */
     private $words;
 
