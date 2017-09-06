@@ -17,8 +17,6 @@ use JMS\Serializer\Annotation as JMS;
  *     required={"word", "dictionary"},
  *     type="object"
  * )
- *
- * @JMS\ExclusionPolicy("all")
  */
 class Word
 {

@@ -207,6 +207,13 @@ class DictionaryController extends FOSRestController
      *       type="integer",
      *       description="get words"
      *     ),
+     *     @SWG\Parameter(
+     *       name="X-page",
+     *       in="header",
+     *       required=true,
+     *       type="integer",
+     *       description="get words"
+     *     ),
      *     @SWG\Response(
      *          response="200",
      *          description="Test"
@@ -225,10 +232,10 @@ class DictionaryController extends FOSRestController
      * @param Dictionary $dictionary
      * @return Response
      */
-    public function getWordsDictionaryAction(Dictionary $dictionary)
+    public function getWordsDictionaryAction(Request $request, Dictionary $dictionary)
     {
         $words = $this->get('app_word_repository')
-            ->fetchWordByDictionary($dictionary, 1, 100);
+            ->fetchWordByDictionary($dictionary, $request->headers->get('X-page'), 100);
 
         $response = $this->handleView(
             $this->view($words->getItems(), 200)
