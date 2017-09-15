@@ -47,12 +47,6 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #     path:     "%database_path%"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -104,3 +98,18 @@ nelmio_cors:
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']
             max_age: 3600
+
+fos_http_cache:
+    tags:
+        enabled: true
+    cache_manager:
+        enabled: true
+    proxy_client:
+        varnish:
+            tags_header: My-Cache-Tags
+            header_length: 2048
+            http:
+                servers:
+                    - 123.123.123.1:6060
+                    - 123.123.123.2
+                base_url: 127.0.0.1

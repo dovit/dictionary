@@ -14,6 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  *
@@ -145,6 +147,10 @@ class DictionaryController extends FOSRestController
      */
     public function createWordAction(Dictionary $dictionary, Request $request)
     {
+        if (is_null($dictionary)) {
+            throw new NotFoundHttpException();
+        }
+
         $word = new Word();
         $form = $this->createForm(WordType::class, $word,
             [
@@ -155,10 +161,8 @@ class DictionaryController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
             $word->setDictionary($dictionary);
-            $manager->persist($word);
-            $manager->flush();
+            $this->get('app_word_repository')->create($word);
             return $this->handleView($this->view([$word], Response::HTTP_CREATED));
         }
 
@@ -229,6 +233,7 @@ class DictionaryController extends FOSRestController
      *                options={"mapping": {"id": "id" }} )
      *
      * @Method({"GET"})
+     * @param Request $request
      * @param Dictionary $dictionary
      * @return Response
      */
@@ -248,6 +253,71 @@ class DictionaryController extends FOSRestController
                 'X-total-item'              => $words->getTotalItemCount(),
             ]
         );
+        return $response;
+    }
+
+
+    /**
+     * @SWG\Get(
+     *     description="Get words",
+     *     path="/dictionaries/{id}/words/stream/",
+     *     tags={"dictionary"},
+     *     @SWG\Parameter(
+     *       name="id",
+     *       in="path",
+     *       required=true,
+     *       type="integer",
+     *       description="get words"
+     *     ),
+     *     @SWG\Parameter(
+     *       name="X-page",
+     *       in="header",
+     *       required=true,
+     *       type="integer",
+     *       description="get words"
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Test"
+     *      )
+     * )
+     *
+     * @Route("/dictionaries/{id}/words/stream/", name="words_get_stream")
+     *
+     * @ParamConverter("id",
+     *                class="AppBundle:Dictionary",
+     *                options={"mapping": {"id": "id" }} )
+     *
+     * @Method({"GET"})
+     * @param Dictionary $dictionary
+     * @return Response
+     */
+    public function getWordsDictionaryStreamAction(Request $request, Dictionary $dictionary)
+    {
+        $response = new StreamedResponse();
+        //$response->headers->set('Content-Type', 'application/octet-stream');
+
+        $response->sendHeaders();
+
+        $em = $this->getDoctrine()->getManager();
+        $this->getDoctrine()->getManager()->getConfiguration()->setSQLLogger(null);
+        $repository = $this->get('app_word_repository');
+
+        $response->setCallback(function () use ($repository, $dictionary, $em) {
+            $page = 1;
+
+            while ($page < 100) {
+                set_time_limit(5);
+                $data = $repository->fetchWordByDictionary($dictionary, $page, 100);
+                echo "memory:" . memory_get_usage() . "<br />";
+                var_dump($data->getItems());
+                flush();
+                $page++;
+
+                $em->clear();
+            }
+        });
+        $response->sendContent();
         return $response;
     }
 

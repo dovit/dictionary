@@ -13,8 +13,7 @@ class WordType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('word')
-                ->add('dictionary');
+        $builder->add('word');
     }
     
     /**

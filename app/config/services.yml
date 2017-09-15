@@ -8,3 +8,13 @@ services:
             - method: setPaginate
               arguments:
                 - '@knp_paginator'
+            - method: setDispatcher
+              arguments:
+                - '@event_dispatcher'
+
+    app.word.invalidation_cache:
+        class: AppBundle\EventListener\InvalidationCacheWordListener
+        arguments:
+            - '@fos_http_cache.cache_manager'
+        tags:
+            - { name: kernel.event_listener, event: word.created }

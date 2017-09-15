@@ -29,9 +29,10 @@
         "nelmio/cors-bundle": "^1.5",
         "friendsofsymfony/http-cache-bundle": "^2.1",
         "guzzlehttp/psr7": "^1.4",
-        "php-http/guzzle6-adapter": "^1.1",
         "symfony/property-access": "^3.3",
-        "knplabs/knp-paginator-bundle": "^2.6"
+        "knplabs/knp-paginator-bundle": "^2.6",
+        "friendsofsymfony/http-cache": "^2.0",
+        "php-amqplib/rabbitmq-bundle": "^1.12"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
