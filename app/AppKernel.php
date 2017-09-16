@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new FOS\HttpCacheBundle\FOSHttpCacheBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

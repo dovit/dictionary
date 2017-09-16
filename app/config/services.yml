@@ -18,3 +18,10 @@ services:
             - '@fos_http_cache.cache_manager'
         tags:
             - { name: kernel.event_listener, event: word.created }
+
+    app.word.dispatch_event_outside:
+        class: AppBundle\EventListener\DispatchOutsideWordListener
+        arguments:
+            - '@old_sound_rabbit_mq.word_producer'
+        tags:
+            - { name: kernel.event_listener, event: word.created }
