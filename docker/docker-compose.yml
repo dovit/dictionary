@@ -25,7 +25,7 @@ services:
       - docker_some-net
 
   dictionary-php-fpm:
-    build: php-fpm/Dockerfile
+    build: ./php-fpm/
     container_name: dictionary-php-fpm
     volumes:
       - ../:/var/www/dictionary
