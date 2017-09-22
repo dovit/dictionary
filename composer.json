@@ -32,7 +32,8 @@
         "symfony/property-access": "^3.3",
         "knplabs/knp-paginator-bundle": "^2.6",
         "friendsofsymfony/http-cache": "^2.0",
-        "php-amqplib/rabbitmq-bundle": "^1.12"
+        "php-amqplib/rabbitmq-bundle": "^1.12",
+        "lexik/jwt-authentication-bundle": "^2.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
