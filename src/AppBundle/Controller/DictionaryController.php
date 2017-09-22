@@ -29,6 +29,10 @@ class DictionaryController extends FOSRestController
      *     description="Get a dictionary",
      *     path="/dictionaries/",
      *     tags={"dictionary"},
+     *     @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header"
+     *     ),
      *     @SWG\Response(
      *          response="200",
      *          description="Test"
@@ -44,6 +48,8 @@ class DictionaryController extends FOSRestController
      */
     public function getAction()
     {
+        //$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
+
         $dictionaries = $this->get('doctrine')
             ->getManager()
             ->getRepository('AppBundle:Dictionary')
@@ -256,7 +262,6 @@ class DictionaryController extends FOSRestController
         return $response;
     }
 
-
     /**
      * @SWG\Get(
      *     description="Get words",
@@ -295,7 +300,6 @@ class DictionaryController extends FOSRestController
     public function getWordsDictionaryStreamAction(Request $request, Dictionary $dictionary)
     {
         $response = new StreamedResponse();
-        //$response->headers->set('Content-Type', 'application/octet-stream');
 
         $response->sendHeaders();
 
@@ -310,7 +314,6 @@ class DictionaryController extends FOSRestController
                 set_time_limit(5);
                 $data = $repository->fetchWordByDictionary($dictionary, $page, 100);
                 echo "memory:" . memory_get_usage() . "<br />";
-                var_dump($data->getItems());
                 flush();
                 $page++;
 
