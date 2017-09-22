@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Dictionary;
 use AppBundle\Entity\Word;
-use AppBundle\Form\DictionaryType;
-use AppBundle\Form\WordType;
+use AppBundle\Form\Type\DictionaryType;
+use AppBundle\Form\Type\WordType;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -296,8 +296,9 @@ class DictionaryController extends FOSRestController
      * @Method({"GET"})
      * @param Dictionary $dictionary
      * @return Response
+     * @internal param Request $request
      */
-    public function getWordsDictionaryStreamAction(Request $request, Dictionary $dictionary)
+    public function getWordsDictionaryStreamAction(Dictionary $dictionary)
     {
         $response = new StreamedResponse();
 
@@ -309,16 +310,22 @@ class DictionaryController extends FOSRestController
 
         $response->setCallback(function () use ($repository, $dictionary, $em) {
             $page = 1;
-
+            echo "[";
             while ($page < 100) {
                 set_time_limit(5);
                 $data = $repository->fetchWordByDictionary($dictionary, $page, 100);
-                echo "memory:" . memory_get_usage() . "<br />";
+
+                foreach ($data as $row) {
+                    echo "{";
+                    echo '"word:"' . $row->getWord();
+                    echo '},';
+                }
+
                 flush();
                 $page++;
-
                 $em->clear();
             }
+            echo "]";
         });
         $response->sendContent();
         return $response;
