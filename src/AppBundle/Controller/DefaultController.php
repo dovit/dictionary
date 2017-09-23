@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Swagger\Annotations as SWG;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * @SWG\Swagger(
@@ -21,6 +22,8 @@ class DefaultController extends Controller
 {
     /**
      * @Route("/swagger.json", name="documentation")
+     *
+     * @Method({"GET"})
      */
     public function documentationAction()
     {

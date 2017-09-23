@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Dictionary;
 use AppBundle\Entity\Word;
-use AppBundle\Form\DictionaryType;
-use AppBundle\Form\WordType;
+use AppBundle\Form\Type\DictionaryType;
+use AppBundle\Form\Type\WordType;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -29,6 +29,10 @@ class DictionaryController extends FOSRestController
      *     description="Get a dictionary",
      *     path="/dictionaries/",
      *     tags={"dictionary"},
+     *     @SWG\Parameter(
+     *          name="Authorization",
+     *          in="header"
+     *     ),
      *     @SWG\Response(
      *          response="200",
      *          description="Test"
@@ -157,7 +161,6 @@ class DictionaryController extends FOSRestController
                 'method' => 'POST',
             ]
         );
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -256,7 +259,6 @@ class DictionaryController extends FOSRestController
         return $response;
     }
 
-
     /**
      * @SWG\Get(
      *     description="Get words",
@@ -291,31 +293,27 @@ class DictionaryController extends FOSRestController
      * @Method({"GET"})
      * @param Dictionary $dictionary
      * @return Response
+     * @internal param Request $request
      */
-    public function getWordsDictionaryStreamAction(Request $request, Dictionary $dictionary)
+    public function getWordsDictionaryStreamAction(Dictionary $dictionary)
     {
         $response = new StreamedResponse();
-        //$response->headers->set('Content-Type', 'application/octet-stream');
-
-        $response->sendHeaders();
-
         $em = $this->getDoctrine()->getManager();
+        $response->sendHeaders();
         $this->getDoctrine()->getManager()->getConfiguration()->setSQLLogger(null);
         $repository = $this->get('app_word_repository');
-
         $response->setCallback(function () use ($repository, $dictionary, $em) {
             $page = 1;
-
+            echo "[";
             while ($page < 100) {
                 set_time_limit(5);
                 $data = $repository->fetchWordByDictionary($dictionary, $page, 100);
-                echo "memory:" . memory_get_usage() . "<br />";
-                var_dump($data->getItems());
-                flush();
+                foreach ($data as $row)
+                    echo "{" . '"word:"' . $row->getWord() . '},';
                 $page++;
-
                 $em->clear();
             }
+            echo "]";
         });
         $response->sendContent();
         return $response;
