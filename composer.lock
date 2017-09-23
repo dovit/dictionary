@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c5a95647da2a906ad259fa0e9d78355",
+    "content-hash": "5c2fa6db4d18b4e7e84dd90db0330638",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -4169,7 +4169,7 @@
             ],
             "authors": [
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
