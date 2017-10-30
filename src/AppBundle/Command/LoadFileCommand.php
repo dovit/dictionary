@@ -58,6 +58,8 @@ class LoadFileCommand extends ContainerAwareCommand
         $generator = $this->readFile($fd);
         foreach ($generator as $value)
         {
+            if ($value === '')
+                continue;
             $tmp = new Word();
             $tmp->setWord($value);
             $tmp->setDictionary($dictionary);
