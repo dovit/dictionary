@@ -27,21 +27,26 @@ class DictionaryController extends FOSRestController
     /**
      * @SWG\Get(
      *     description="Get a dictionary",
-     *     path="/dictionaries/",
+     *     path="/api/dictionaries/",
      *     tags={"dictionary"},
      *     @SWG\Parameter(
      *          name="Authorization",
-     *          in="header"
+     *          in="header",
+     *          type="string"
      *     ),
      *     @SWG\Response(
      *          response="200",
-     *          description="Test"
+     *          description="List of dictionaries"
+     *      ),
+     *     @SWG\Response(
+     *          response="401",
+     *          description="Unauthorized"
      *      )
      * )
      *
      * @View(serializerGroups={"dictionary_get"})
      *
-     * @Route("/dictionaries/", name="dictionaries_get")
+     * @Route("/api/dictionaries/", name="dictionaries_get")
      *
      * @Method({"GET"})
      *
@@ -60,7 +65,7 @@ class DictionaryController extends FOSRestController
      * @Method({"POST"})
      *
      * @SWG\Post(
-     *   path="/dictionaries/",
+     *   path="/api/dictionaries/",
      *   summary="Create an dictionary",
      *   tags={"dictionary"},
      *   description="Create an dictionary",
@@ -70,6 +75,11 @@ class DictionaryController extends FOSRestController
      *       description="Dictionary object",
      *       required=true,
      *       @SWG\Schema(ref="#/definitions/Dictionary")
+     *   ),
+     *   @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
      *   ),
      *   @SWG\Response(
      *     response=201,
@@ -83,7 +93,7 @@ class DictionaryController extends FOSRestController
      *
      * @View()
      *
-     * @Route("/dictionaries/", name="dictionary_create")
+     * @Route("/api/dictionaries/", name="dictionary_create")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -112,9 +122,9 @@ class DictionaryController extends FOSRestController
      * @Method({"POST"})
      *
      * @SWG\Post(
-     *   path="/dictionaries/{id}/words/",
+     *   path="/api/dictionaries/{id}/words/",
      *   summary="Create word",
-     *   tags={"dictionary"},
+     *   tags={"word"},
      *   description="Create word",
      *   @SWG\Parameter(
      *       name="body",
@@ -130,6 +140,11 @@ class DictionaryController extends FOSRestController
      *       required=true,
      *       type="integer"
      *   ),
+     *   @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
+     *     ),
      *   @SWG\Response(
      *     response=201,
      *     description="Dictionary created"
@@ -144,14 +159,15 @@ class DictionaryController extends FOSRestController
      *
      * @View()
      *
-     * @Route("/dictionaries/{dictionary}/words/", name="word_create")
+     * @Route("/api/dictionaries/{dictionary}/words/", name="word_create")
      * @param Dictionary $dictionary
      * @param Request $request
      * @return Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function createWordAction(Dictionary $dictionary, Request $request)
     {
-        if (is_null($dictionary)) {
+        if (null === $dictionary) {
             throw new NotFoundHttpException();
         }
 
@@ -175,7 +191,7 @@ class DictionaryController extends FOSRestController
     /**
      * @SWG\Get(
      *     description="Get a dictionary",
-     *     path="/dictionaries/{id}",
+     *     path="/api/dictionaries/{id}",
      *     tags={"dictionary"},
      *     @SWG\Parameter(
      *       name="id",
@@ -184,29 +200,36 @@ class DictionaryController extends FOSRestController
      *       type="integer",
      *       description="dictionary id"
      *     ),
+     *     @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
+     *     ),
      *     @SWG\Response(
-     *          response="200",
-     *          description="Test"
+     *       response="200",
+     *       description="Test"
      *      )
      * )
      *
      * @View()
      *
-     * @Route("/dictionaries/{id}", name="dictionary_get")
+     * @Route("/api/dictionaries/{id}", name="dictionary_get")
+     * @ParamConverter("dictionary", class="AppBundle:Dictionary")
      *
      * @Method({"GET"})
-     *
+     * @param Dictionary $dictionary
+     * @return Response
      */
-    public function getDictionaryAction()
+    public function getDictionaryAction(Dictionary $dictionary)
     {
-        return $this->handleView($this->view(['test' => 2], Response::HTTP_OK));
+        return $this->handleView($this->view($dictionary), Response::HTTP_OK);
     }
 
     /**
      * @SWG\Get(
      *     description="Get words",
-     *     path="/dictionaries/{id}/words/",
-     *     tags={"dictionary"},
+     *     path="/api/dictionaries/{id}/words/",
+     *     tags={"word"},
      *     @SWG\Parameter(
      *       name="id",
      *       in="path",
@@ -221,15 +244,20 @@ class DictionaryController extends FOSRestController
      *       type="integer",
      *       description="get words"
      *     ),
+     *     @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
+     *     ),
      *     @SWG\Response(
-     *          response="200",
-     *          description="Test"
-     *      )
+     *       response="200",
+     *       description="Test"
+     *     )
      * )
      *
      * @View()
      *
-     * @Route("/dictionaries/{id}/words/", name="words_get")
+     * @Route("/api/dictionaries/{id}/words/", name="words_get")
      *
      * @ParamConverter("id",
      *                class="AppBundle:Dictionary",
@@ -262,8 +290,8 @@ class DictionaryController extends FOSRestController
     /**
      * @SWG\Get(
      *     description="Get words",
-     *     path="/dictionaries/{id}/words/stream/",
-     *     tags={"dictionary"},
+     *     path="/api/dictionaries/{id}/words/stream/",
+     *     tags={"word"},
      *     @SWG\Parameter(
      *       name="id",
      *       in="path",
@@ -278,13 +306,18 @@ class DictionaryController extends FOSRestController
      *       type="integer",
      *       description="get words"
      *     ),
+     *     @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
+     *     ),
      *     @SWG\Response(
-     *          response="200",
-     *          description="Test"
-     *      )
+     *       response="200",
+     *       description="Test"
+     *     )
      * )
      *
-     * @Route("/dictionaries/{id}/words/stream/", name="words_get_stream")
+     * @Route("/api/dictionaries/{id}/words/stream/", name="words_get_stream")
      *
      * @ParamConverter("id",
      *                class="AppBundle:Dictionary",
@@ -293,27 +326,30 @@ class DictionaryController extends FOSRestController
      * @Method({"GET"})
      * @param Dictionary $dictionary
      * @return Response
-     * @internal param Request $request
      */
     public function getWordsDictionaryStreamAction(Dictionary $dictionary)
     {
         $response = new StreamedResponse();
         $em = $this->getDoctrine()->getManager();
+
         $response->sendHeaders();
-        $this->getDoctrine()->getManager()->getConfiguration()->setSQLLogger(null);
+        $em->getConfiguration()->setSQLLogger(null);
         $repository = $this->get('app_word_repository');
-        $response->setCallback(function () use ($repository, $dictionary, $em) {
+        $response->setCallback(/**
+         *
+         */
+            function () use ($repository, $dictionary, $em) {
             $page = 1;
-            echo "[";
+            echo '[';
             while ($page < 100) {
                 set_time_limit(5);
                 $data = $repository->fetchWordByDictionary($dictionary, $page, 100);
                 foreach ($data as $row)
-                    echo "{" . '"word:"' . $row->getWord() . '},';
+                    echo '{' . '"word:"' . $row->getWord() . '},';
                 $page++;
                 $em->clear();
             }
-            echo "]";
+            echo ']';
         });
         $response->sendContent();
         return $response;
@@ -322,7 +358,7 @@ class DictionaryController extends FOSRestController
     /**
      * @SWG\Delete(
      *     description="Delete a dictionary",
-     *     path="/dictionaries/{id}",
+     *     path="/api/dictionaries/{id}",
      *     tags={"dictionary"},
      *     @SWG\Parameter(
      *       name="id",
@@ -331,15 +367,20 @@ class DictionaryController extends FOSRestController
      *       type="integer",
      *       description="dictionary id"
      *     ),
+     *     @SWG\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       type="string"
+     *     ),
      *     @SWG\Response(
-     *          response="200",
-     *          description="Test"
-     *      )
+     *       response="200",
+     *       description="Test"
+     *     )
      * )
      *
      * @View()
      *
-     * @Route("/dictionaries/{id}", name="dictionary_delete")
+     * @Route("/api/dictionaries/{id}", name="dictionary_delete")
      *
      * @Method({"DELETE"})
      *

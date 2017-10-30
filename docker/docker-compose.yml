@@ -6,7 +6,7 @@ services:
     container_name: dictionary-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=ftv
+      - MYSQL_DATABASE=dictionary
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
     networks:
@@ -27,6 +27,8 @@ services:
   dictionary-php-fpm:
     build: ./php-fpm/
     container_name: dictionary-php-fpm
+    environment:
+      - JWT_PASSPHRASE=jwtmypassphrase
     volumes:
       - ../:/var/www/dictionary
       - ./php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini

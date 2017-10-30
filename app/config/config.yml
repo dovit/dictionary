@@ -9,7 +9,8 @@ parameters:
     locale: en
 
 framework:
-    #esi:             ~
+    fragments: { path: /_fragment }
+    esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
@@ -75,7 +76,7 @@ fos_rest:
     format_listener:
         enabled: true
         rules:
-            - { path: '^/', priorities: ['json'], fallback_format: json }
+            - { path: '^/', priorities: ['html', 'json'], fallback_format: json }
     service:
         view_handler: fos_rest.view_handler.default
     view:
