@@ -138,7 +138,7 @@ class DictionaryController extends FOSRestController
      *       in="path",
      *       description="Dictionary",
      *       required=true,
-     *       type="integer"
+     *       type="string"
      *   ),
      *   @SWG\Parameter(
      *       name="Authorization",
@@ -197,7 +197,7 @@ class DictionaryController extends FOSRestController
      *       name="id",
      *       in="path",
      *       required=true,
-     *       type="integer",
+     *       type="string",
      *       description="dictionary id"
      *     ),
      *     @SWG\Parameter(
@@ -234,7 +234,7 @@ class DictionaryController extends FOSRestController
      *       name="id",
      *       in="path",
      *       required=true,
-     *       type="integer",
+     *       type="string",
      *       description="get words"
      *     ),
      *     @SWG\Parameter(
@@ -296,7 +296,7 @@ class DictionaryController extends FOSRestController
      *       name="id",
      *       in="path",
      *       required=true,
-     *       type="integer",
+     *       type="string",
      *       description="get words"
      *     ),
      *     @SWG\Parameter(
@@ -364,7 +364,7 @@ class DictionaryController extends FOSRestController
      *       name="id",
      *       in="path",
      *       required=true,
-     *       type="integer",
+     *       type="string",
      *       description="dictionary id"
      *     ),
      *     @SWG\Parameter(

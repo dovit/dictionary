@@ -42,10 +42,9 @@ class Dictionary
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
+     * @ORM\Column(name="id", type="string")
+     * @ORM\GeneratedValue(strategy="UUID")
      * @JMS\Groups({"list", "details", "dictionary_get"})
      */
     private $id;

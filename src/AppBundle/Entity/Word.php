@@ -21,11 +21,9 @@ use JMS\Serializer\Annotation as JMS;
 class Word
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="string")
+     * @ORM\GeneratedValue(strategy="UUID")
      *
      * @JMS\Expose()
      */
