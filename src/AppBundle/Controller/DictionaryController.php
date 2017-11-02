@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Services\Dictionary as DictionaryService;
+use AppBundle\Services\Word as WordService;
 
 /**
  *
@@ -181,7 +183,7 @@ class DictionaryController extends FOSRestController
 
         if ($form->isValid()) {
             $word->setDictionary($dictionary);
-            $this->get('app_word_repository')->create($word);
+            $this->get(\AppBundle\Services\Word::class)->create($word);
             return $this->handleView($this->view([$word], Response::HTTP_CREATED));
         }
 
@@ -270,7 +272,7 @@ class DictionaryController extends FOSRestController
      */
     public function getWordsDictionaryAction(Request $request, Dictionary $dictionary)
     {
-        $words = $this->get('app_word_repository')
+        $words = $this->get(WordService::class)
             ->fetchWordByDictionary($dictionary, $request->headers->get('X-page'), 100);
 
         $response = $this->handleView(
@@ -387,6 +389,9 @@ class DictionaryController extends FOSRestController
      */
     public function deleteDictionaryAction()
     {
-        return $this->handleView($this->view(['test' => 2], Response::HTTP_OK));
+        return $this->handleView($this->view(
+            ['test' => 2],
+            Response::HTTP_OK
+        ));
     }
 }

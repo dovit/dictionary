@@ -8,9 +8,16 @@ services:
             - method: setPaginate
               arguments:
                 - '@knp_paginator'
-            - method: setDispatcher
+
+    app_dictionary_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine', getRepository]
+        arguments:
+          - 'AppBundle:Dictionary'
+        calls:
+            - method: setPaginate
               arguments:
-                - '@event_dispatcher'
+                - '@knp_paginator'
 
     app.word.invalidation_cache:
         class: AppBundle\EventListener\InvalidationCacheWordListener
@@ -27,3 +34,21 @@ services:
         tags:
             - { name: kernel.event_listener, event: word.created }
             - { name: kernel.event_listener, event: dictionary.loaded }
+
+    AppBundle\Services\Word:
+        class: AppBundle\Services\Word
+        arguments:
+            - '@app_word_repository'
+        calls:
+            - method: setDispatcher
+              arguments:
+                - '@event_dispatcher'
+
+    AppBundle\Services\Dictionary:
+        class: AppBundle\Services\Dictionary
+        arguments:
+            - '@app_dictionary_repository'
+        calls:
+            - method: setDispatcher
+              arguments:
+                - '@event_dispatcher'

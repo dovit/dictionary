@@ -3,10 +3,8 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Word;
-use AppBundle\Event\WordCreated;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Paginator;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * WordRepository.
@@ -17,16 +15,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class WordRepository extends EntityRepository
 {
     private $paginate;
-    private $dispatcher;
 
     public function setPaginate(Paginator $paginate)
     {
         $this->paginate = $paginate;
-    }
-
-    public function setDispatcher(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -42,6 +34,7 @@ class WordRepository extends EntityRepository
         $query = $this->createQueryBuilder('w')
             ->where('w.dictionary = :dictionary')
             ->setParameter('dictionary', $dictionary)
+            ->orderBy('w.word')
             ->getQuery();
 
         return $this->paginate->paginate(
@@ -60,8 +53,16 @@ class WordRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($word);
         $this->getEntityManager()->flush();
+    }
 
-        $event = new WordCreated($word);
-        $this->dispatcher->dispatch(WordCreated::NAME, $event);
+    /**
+     * Delete a word
+     *
+     * @param Word $word
+     */
+    public function delete(Word $word)
+    {
+        $this->getEntityManager()->remove($word);
+        $this->getEntityManager()->flush();
     }
 }

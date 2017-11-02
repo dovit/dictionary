@@ -8,12 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Dictionary.
  *
  * @ORM\Table(name="dictionary")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DictionaryRepository")
+ * @UniqueEntity("code")
  *
  * @Hateoas\Relation(
  *      "delete",
@@ -55,7 +57,7 @@ class Dictionary
      * @Assert\NotBlank()
      * @Assert\NotNull()
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, unique=true)
      *
      * @SWG\Property(readOnly=false, example="fr")
      */
