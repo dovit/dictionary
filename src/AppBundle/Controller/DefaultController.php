@@ -54,4 +54,13 @@ class DefaultController extends Controller
         $swagger = \Swagger\scan($this->get('kernel')->getRootDir() . '/../src');
         return new JsonResponse($swagger);
     }
+
+    /**
+     * @Route("/", name="home")
+     * @Method({"GET"})
+     */
+    public function testAction()
+    {
+        return new Response('{"test": "success"}');
+    }
 }

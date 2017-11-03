@@ -404,12 +404,4 @@ class DictionaryController extends FOSRestController
             RESPONSE::HTTP_NO_CONTENT
         ));
     }
-
-    /**
-     * @Route("/", name="home")
-     */
-    public function testAction()
-    {
-        return new Response('home');
-    }
 }
