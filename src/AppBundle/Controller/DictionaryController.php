@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Services\Dictionary as DictionaryService;
 use AppBundle\Services\Word as WordService;
+use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 
 /**
  *
@@ -52,9 +53,12 @@ class DictionaryController extends FOSRestController
      *
      * @Method({"GET"})
      *
+     * @return Response
      */
     public function getAction()
     {
+        $this->get('fos_http_cache.http.symfony_response_tagger')->addTags(['dictionaries']);
+
         $dictionaries = $this->get('doctrine')
             ->getManager()
             ->getRepository('AppBundle:Dictionary')
@@ -111,9 +115,7 @@ class DictionaryController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($dictionary);
-            $manager->flush();
+            $this->get(DictionaryService::class)->create($dictionary);
             return $this->handleView($this->view([$dictionary], Response::HTTP_CREATED));
         }
 
@@ -183,7 +185,7 @@ class DictionaryController extends FOSRestController
 
         if ($form->isValid()) {
             $word->setDictionary($dictionary);
-            $this->get(\AppBundle\Services\Word::class)->create($word);
+            $this->get(WordService::class)->create($word);
             return $this->handleView($this->view([$word], Response::HTTP_CREATED));
         }
 
@@ -224,6 +226,8 @@ class DictionaryController extends FOSRestController
      */
     public function getDictionaryAction(Dictionary $dictionary)
     {
+        $this->get('fos_http_cache.http.symfony_response_tagger')->addTags(['dictionaries-'.$dictionary->getId()]);
+
         return $this->handleView($this->view($dictionary), Response::HTTP_OK);
     }
 
@@ -337,9 +341,7 @@ class DictionaryController extends FOSRestController
         $response->sendHeaders();
         $em->getConfiguration()->setSQLLogger(null);
         $repository = $this->get('app_word_repository');
-        $response->setCallback(/**
-         *
-         */
+        $response->setCallback(
             function () use ($repository, $dictionary, $em) {
             $page = 1;
             echo '[';
@@ -380,18 +382,34 @@ class DictionaryController extends FOSRestController
      *     )
      * )
      *
+     * @ParamConverter("id",
+     *                class="AppBundle:Dictionary",
+     *                options={"mapping": {"id": "id" }} )
+     *
      * @View()
      *
      * @Route("/api/dictionaries/{id}", name="dictionary_delete")
      *
      * @Method({"DELETE"})
      *
+     * @param Dictionary $dictionary
+     *
+     * @return Response
      */
-    public function deleteDictionaryAction()
+    public function deleteDictionaryAction(Dictionary $dictionary)
     {
+        $this->get(DictionaryService::class)->delete($dictionary);
         return $this->handleView($this->view(
-            ['test' => 2],
-            Response::HTTP_OK
+            null,
+            RESPONSE::HTTP_NO_CONTENT
         ));
+    }
+
+    /**
+     * @Route("/", name="home")
+     */
+    public function testAction()
+    {
+        return new Response('home');
     }
 }

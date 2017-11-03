@@ -111,8 +111,7 @@ fos_http_cache:
             header_length: 2048
             http:
                 servers:
-                    - 123.123.123.1:6060
-                    - 123.123.123.2
+                    - dictionary-varnish:6081
                 base_url: 127.0.0.1
 
 old_sound_rabbit_mq:

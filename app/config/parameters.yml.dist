@@ -4,9 +4,9 @@
 parameters:
     database_host:     dictionary-mysql
     database_port:     ~
-    database_name:     ftv
-    database_user:     root
-    database_password: root
+    database_name:     dictionary
+    database_user:     dictionary_user
+    database_password: passwd
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
@@ -23,7 +23,10 @@ parameters:
     rabbitmq_user: user
     rabbitmq_password: pass
 
-    jwt_private_key_path: '%kernel.project_dir%/../var/jwt/private.pem'
-    jwt_public_key_path:  '%kernel.project_dir%/../var/jwt/public.pem'
-    jwt_key_pass_phrase:  ''
+    jwt_private_key_path: '%kernel.project_dir%/var/jwt/private.pem'
+    jwt_public_key_path:  '%kernel.project_dir%/var/jwt/public.pem'
+    jwt_key_pass_phrase:  'jwtmypassphrase'
     jwt_token_ttl:        3600
+
+    pass_user: ~
+    pass_admin: ~
