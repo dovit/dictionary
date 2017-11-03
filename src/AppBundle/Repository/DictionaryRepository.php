@@ -15,17 +15,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DictionaryRepository extends EntityRepository
 {
-    private $dispatcher;
     private $paginate;
 
     public function setPaginate(Paginator $paginate)
     {
         $this->paginate = $paginate;
-    }
-
-    public function setDispatcher(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
     }
 
     /**
