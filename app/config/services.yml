@@ -31,6 +31,7 @@ services:
         arguments:
             - '@old_sound_rabbit_mq.word_producer'
             - '@jms_serializer'
+            - '@logger'
         tags:
             - { name: kernel.event_listener, event: word.created }
             - { name: kernel.event_listener, event: dictionary.loaded }

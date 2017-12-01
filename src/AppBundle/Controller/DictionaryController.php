@@ -116,7 +116,7 @@ class DictionaryController extends FOSRestController
 
         if ($form->isValid()) {
             $this->get(DictionaryService::class)->create($dictionary);
-            return $this->handleView($this->view([$dictionary], Response::HTTP_CREATED));
+            return $this->handleView($this->view($dictionary, Response::HTTP_CREATED));
         }
 
         return $this->handleView($this->view($form->getErrors(), Response::HTTP_BAD_REQUEST));

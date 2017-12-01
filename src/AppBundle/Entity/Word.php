@@ -5,12 +5,19 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as JMS;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * Word.
  *
- * @ORM\Table(name="word")
+ * @ORM\Table(name="word",
+ *     indexes={
+ *          @ORM\Index(name="dictionary_id", columns={"dictionary_id"})
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="AppBundle\Repository\WordRepository")
+ *
+ * @ExclusionPolicy("all")
  *
  * @SWG\Definition(
  *     definition="Word",
@@ -22,7 +29,7 @@ class Word
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id", type="string")
+     * @ORM\Column(name="id", type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
      *
      * @JMS\Expose()

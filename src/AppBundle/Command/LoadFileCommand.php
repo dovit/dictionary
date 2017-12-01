@@ -38,13 +38,14 @@ class LoadFileCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $cnt = 0;
+        $time = time();
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->getConnection()->getConfiguration()->setSQLLogger(null);
 
         $file = $input->getArgument('file');
         $code = $input->getArgument('code');
 
-        $fd = fopen($file, "r");
+        $fd = fopen($file, 'r');
 
         if ($fd === false) {
             return;
@@ -58,20 +59,25 @@ class LoadFileCommand extends ContainerAwareCommand
         $generator = $this->readFile($fd);
         foreach ($generator as $value)
         {
-            if ($value === '')
+            if ($value === '') {
                 continue;
+            }
+
             $tmp = new Word();
             $tmp->setWord($value);
             $tmp->setDictionary($dictionary);
             $dictionary->getWords()->add($tmp);
+
             $em->persist($tmp);
 
-            if ($cnt === 10000) {
+            if ($cnt === 1000) {
                 $em->flush();
                 $em->clear();
                 $dictionary = $em->getRepository('AppBundle:Dictionary')
                     ->findOneByCode($code);
                 $cnt = 0;
+                $output->writeln(memory_get_peak_usage().' '.(time()-$time));
+                $time = time();
             }
             $cnt++;
         }
@@ -79,10 +85,12 @@ class LoadFileCommand extends ContainerAwareCommand
         $em->flush();
         $em->clear();
 
+        $output->writeln($dictionary->getId());
+
         $event = new DictionaryLoaded($dictionary);
         $this->getContainer()->get('event_dispatcher')->dispatch(DictionaryLoaded::NAME, $event);
 
         $output->writeln(memory_get_peak_usage());
-        $output->writeln("end");
+        $output->writeln('end');
     }
 }

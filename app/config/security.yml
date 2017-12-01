@@ -35,11 +35,11 @@ security:
                 require_previous_session: false
 
         api:
-            pattern:   ^/api/
+            pattern:   ^/rezrez/
             stateless: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/ytdyjdiytd, roles: IS_AUTHENTICATED_FULLY }

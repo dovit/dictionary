@@ -13,7 +13,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Dictionary.
  *
- * @ORM\Table(name="dictionary")
+ * @ORM\Table(name="dictionary",
+ *     indexes={
+ *          @ORM\Index(name="code", columns={"code"})
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DictionaryRepository")
  * @UniqueEntity("code")
  *
@@ -45,7 +49,7 @@ class Dictionary
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(name="id", type="string")
+     * @ORM\Column(name="id", type="guid", unique=true)
      * @ORM\GeneratedValue(strategy="UUID")
      * @JMS\Groups({"list", "details", "dictionary_get"})
      */
@@ -57,7 +61,7 @@ class Dictionary
      * @Assert\NotBlank()
      * @Assert\NotNull()
      *
-     * @ORM\Column(name="title", type="string", length=255, unique=true)
+     * @ORM\Column(name="code", type="string", length=255, unique=true)
      *
      * @SWG\Property(readOnly=false, example="fr")
      */

@@ -28,5 +28,5 @@ parameters:
     jwt_key_pass_phrase:  'jwtmypassphrase'
     jwt_token_ttl:        3600
 
-    pass_user: ~
-    pass_admin: ~
+    pass_user: pass
+    pass_admin: pass

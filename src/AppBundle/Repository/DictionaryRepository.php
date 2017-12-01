@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\Dictionary;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\Paginator;
 
 /**
  * DictionaryRepository
@@ -13,6 +14,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class DictionaryRepository extends EntityRepository
 {
+    private $paginate;
+
+    public function setPaginate(Paginator $paginate)
+    {
+        $this->paginate = $paginate;
+    }
     /**
      * @param $code
      *
