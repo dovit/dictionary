@@ -17,8 +17,8 @@ services:
     container_name: dictionary-webserver
     volumes:
         - ../:/var/www/dictionary
-        - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
      - "8089:8080"
     environment:
@@ -27,13 +27,13 @@ services:
       - docker_some-net
 
   dictionary-php-fpm:
-    build: ./php-fpm/
+    build: ./docker/php-fpm/
     container_name: dictionary-php-fpm
     environment:
       - JWT_PASSPHRASE=jwtmypassphrase
     volumes:
-      - ../:/var/www/dictionary
-      - ./php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
+      - ./:/var/www/dictionary
+      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
     networks:
       - docker_some-net
 
@@ -49,7 +49,7 @@ services:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_VHOST: /
     volumes:
-      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
     networks:
       - docker_some-net
 
